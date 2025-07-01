@@ -1,0 +1,42 @@
+# GameMaker Studio 2 Ignore List
+
+# Windows specific
+options.ini
+options_windows.ini
+
+# Mac specific
+options_mac.ini
+
+# HTML5 specific
+options_html5.ini
+
+# Mobile specific
+options_android.ini
+options_ios.ini
+options_tvos.ini
+
+# Backups
+*.yyz
+
+# Caches
+*~
+*.gml~
+*/Audio/*~
+*/Sprites/*~
+*/Rooms/*~
+*/Scripts/*~
+*/Shaders/*~
+*/Fonts/*~
+*/Timelines/*~
+*/Objects/*~
+*/Paths/*~
+*/Notes/*~
+*/Extensions/*~
+
+# Folders
+build/
+datafiles/
+project/
+target/
+user/
+GameMakerStudio2/
