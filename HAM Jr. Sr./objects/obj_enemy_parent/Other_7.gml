@@ -4,3 +4,9 @@ switch(state) {
         image_speed = 0;
     break;
 }
+
+if (state == states.DEADNUDGE)
+{
+    state = states.DEAD;
+    image_speed = 0;
+}

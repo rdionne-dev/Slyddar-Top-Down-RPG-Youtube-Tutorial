@@ -29,9 +29,24 @@ function enemy_anim(){
             show_hurt();
         break;
         
-        case states.DEAD:
+    case states.DEAD:
+        // If the enemy has a nudge sprite AND is currently showing it, leave it alone.
+        // This preserves the final frame after the animation ends.
+        if (spr_deadnudge != -1 && sprite_index == spr_deadnudge)
+        {
+            // Do nothing, keep the frozen sprite.
+        }
+        else
+        {
+            // Otherwise, use the default dead sprite.
             sprite_index = spr_dead;
-        break;
+        }
+    break;
+    
+    case states.DEADNUDGE:
+        // This state should always show the nudge sprite.
+        sprite_index = spr_deadnudge;
+    break;
     }
     depth = -bbox_bottom;
     
