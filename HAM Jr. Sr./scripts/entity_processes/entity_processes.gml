@@ -6,6 +6,7 @@ function damage_entity(_tid, _sid, _damage, _time){
     ///@arg {real} time how long to knock back target
 
     with(_tid) {
+        if alarm[HURT] >0 or state == states.DEAD exit;
         hp -= _damage;
         var _dead = is_dead();
         path_end();
@@ -17,6 +18,7 @@ function damage_entity(_tid, _sid, _damage, _time){
         calc_path_delay = _time;
         alert = true;
         knockback_time = _time;
+        alarm[HURT] = hurt_time;
         if !_dead state = states.KNOCKBACK;
         return _dead;
     } 
@@ -37,6 +39,7 @@ function is_dead() {
                     //play sound
                 break;
                 case obj_player:
+                    if instance_exists(my_bow) instance_destroy(my_bow);
                     //player sound
                 break;
             }

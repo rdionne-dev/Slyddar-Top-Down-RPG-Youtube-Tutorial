@@ -18,6 +18,8 @@ switch(state) {
     
     case states.ATTACK:
         calc_entity_movement();
+        perform_attack();
+        check_facing();
         enemy_anim();
         
         var _dis = distance_to_object(obj_player);
@@ -51,33 +53,27 @@ switch(state) {
     break;
     
     case states.DEAD:
-        // --- THIS IS THE UPDATED LOGIC ---
-        
-        // 1. Identify what, if anything, is nudging us.
+
         var _nudger = noone;
         var _colliding_enemy = instance_place(x, y, obj_enemy_parent);
 
-        // First, check for a live enemy collision.
-        // The check 'state < states.DEAD' works because IDLE, MOVE, etc. have lower enum values.
         if (_colliding_enemy != noone && _colliding_enemy.state < states.DEAD)
         {
             _nudger = _colliding_enemy;
         }
-        // If not a live enemy, check for the player.
+
         else if (instance_exists(obj_player) && place_meeting(x, y, obj_player))
         {
             _nudger = obj_player;
         }
 
-        // 2. If we were nudged by a valid object...
         if (_nudger != noone)
         {
-            // ALWAYS apply the physical nudge.
-            var _nudge_dir = point_direction(_nudger.x, _nudger.y, x, y);
-            hsp += lengthdir_x(5, _nudge_dir);
-            vsp += lengthdir_y(5, _nudge_dir);
 
-            // OPTIONALLY, trigger the special animation state if the nudge sprite exists.
+            var _nudge_dir = point_direction(_nudger.x, _nudger.y, x, y);
+            hsp += lengthdir_x(0.5, _nudge_dir);
+            vsp += lengthdir_y(0.5, _nudge_dir);
+
             if (spr_deadnudge != -1)
             {
                 state = states.DEADNUDGE;
@@ -86,19 +82,18 @@ switch(state) {
             }
         }
 
-        // 3. Process physics and animation for this frame.
         calc_entity_movement();
-        hsp *= 0.2; // Apply high friction
-        vsp *= 0.2;
+        hsp *= 1;
+        vsp *= 1;
 
         enemy_anim();
+        
     break;
 
     case states.DEADNUDGE:
-        // This state's only job is to play the animation while moving.
-        // The physics are identical to a nudged body in the DEAD state.
+
         calc_entity_movement();
-        hsp *= 0.2; // Apply high friction
+        hsp *= 0.2;
         vsp *= 0.2;
 
         enemy_anim();

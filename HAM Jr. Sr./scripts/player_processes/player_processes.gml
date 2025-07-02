@@ -39,8 +39,25 @@ function calc_movement() {
         y += vmove;
     }
     
-    aim_dir = point_direction(x, y, mouse_x, mouse_y);
-    my_bow.image_angle = aim_dir;
+    x += hsp;
+    y += vsp;
+
+    switch(state) {
+        default:
+            var _drag = 0.15;
+        break;
+        
+        case states.DEAD:
+            var _drag = 0.08;
+        break;
+    }
+    hsp = lerp(hsp, 0, _drag);
+    vsp = lerp(vsp, 0, _drag);
+    
+    if instance_exists(my_bow) {
+        aim_dir = point_direction(x, y, mouse_x, mouse_y);
+        my_bow.image_angle = aim_dir;
+    }
 }
 
 //==================================================================================
@@ -51,8 +68,11 @@ function collision() {
     x = xprevious;
     y = yprevious;
     
-    var _disx = abs(_tx - x);
-    var _disy = abs(_ty - y);
+    var _disx = ceil(abs(_tx - x));
+    var _disy = ceil(abs(_ty - y));
+    
+    if place_meeting(x + _disx * sign(_tx - x), y, obj_solid) x = round(x);
+    if place_meeting(x, y + _disy * sign(_ty - y), obj_solid) y = round(y);
     
     repeat (_disx) {
         if !place_meeting(x + sign(_tx - x), y, obj_solid) x += sign (_tx - x);
@@ -64,19 +84,28 @@ function collision() {
 
 //==================================================================================
 function anim() {
-    if hmove != 0 or vmove != 0 {
-    	sprite_index = spr_player_walk;
-    }
-    else {
-        sprite_index = spr_player_idle;
+   
+    switch(state) {
+        default:
+             if hmove != 0 or vmove != 0 {
+            	sprite_index = spr_player_walk;
+            }
+            else {
+                sprite_index = spr_player_idle;
+            }
+        break;
+        
+        case states.DEAD:
+            sprite_index = spr_player_dead;
+        break;
     }
 }
 
 //==================================================================================
 function check_fire(){
     if mouse_check_button(mb_left) {
-        if can_fire {
-            can_fire = false;
+        if can_attack {
+            can_attack = false;
             alarm[0] = fire_rate;
             
             var _dir = point_direction(x, y, mouse_x, mouse_y);

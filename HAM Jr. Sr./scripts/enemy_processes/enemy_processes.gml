@@ -3,6 +3,7 @@ function check_facing() {
     if knockback_time <= 0 {
         var _facing = sign(x - xprev);
         if _facing != 0 facing = _facing;
+//        if _facing != 0 and states.ATTACK facing = _facing * -1;
     }
 }
 
@@ -30,21 +31,17 @@ function enemy_anim(){
         break;
         
     case states.DEAD:
-        // If the enemy has a nudge sprite AND is currently showing it, leave it alone.
-        // This preserves the final frame after the animation ends.
+
         if (spr_deadnudge != -1 && sprite_index == spr_deadnudge)
         {
-            // Do nothing, keep the frozen sprite.
         }
         else
         {
-            // Otherwise, use the default dead sprite.
             sprite_index = spr_dead;
         }
     break;
     
     case states.DEADNUDGE:
-        // This state should always show the nudge sprite.
         sprite_index = spr_deadnudge;
     break;
     }
@@ -57,6 +54,8 @@ function enemy_anim(){
 
 //==================================================================================
 function check_for_player(){
+    
+    if obj_player.state == states.DEAD exit;
     
     var _dis = distance_to_object(obj_player);
     
@@ -150,5 +149,38 @@ function calc_knockback_movement() {
 function show_hurt() {
     if knockback_time-- > 0 sprite_index = spr_hurt
 }
+
+//==================================================================================
+function perform_attack() {
+    
+    if image_index >= attack_frame and can_attack {
+        can_attack = false;
+        alarm[0] = attack_cooldown;
+        
+        var _dir = point_direction(x, y, obj_player.x, obj_player.y);
+        
+        var _xx = x + lengthdir_x(attack_dis, _dir);
+        var _yy = y + lengthdir_y(attack_dis, _dir);
+        
+        var _inst = instance_create_layer(_xx, _yy, "Instances", obj_enemy_hitbox);
+        _inst.owner_id = id;
+        _inst.damage = damage;
+        _inst.knockback_time = knockback_time;
+        
+    }
+        
+}
+    
+
+
+
+//==================================================================================
+
+
+//==================================================================================
+
+
+//==================================================================================
+
 
 //==================================================================================
